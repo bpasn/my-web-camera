@@ -118,7 +118,7 @@ function App() {
           return (
             <div key={ind} className='mt-2'>
               <div className="d-flex justify-content-end align-items-center flex-wrap" style={{ position: 'relative' }}>
-                <div className="canvas" style={{ position:'relative'}}>
+                <div className="canvas" >
                   <img src={image} alt="" style={{ width: '100%' }} />
                   {item.bounding_box && <BoxContainer top={item.bounding_box.top} left={item.bounding_box.left} right={item.bounding_box.right} bottom={item.bounding_box.bottom}/>} 
                 </div>
