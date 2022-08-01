@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
-import qs from 'qs'
+import { BoxContainer } from './StyleComponent'
 import './App.css'
 function App() {
   const photo = useRef(new Array())
@@ -9,8 +9,10 @@ function App() {
   const [openCamera, setOpenCamera] = useState(false)
   const [image, setImage] = useState('')
   const [result, setResult] = useState(null)
+
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
+
   const getVideo = () => {
     navigator.mediaDevices.getUserMedia({
       video: { width: 350, height: 200, },
@@ -55,7 +57,6 @@ function App() {
     } else {
       console.log('this is error')
       setResult(null)
-
       setError({ "error": { message: 'error' } })
     }
   }
@@ -81,7 +82,7 @@ function App() {
           setHasPhoto(true)
           img.src = evt.target.result;
           img.onload = () => cxt.drawImage(img, 0, 0, width, height);
-          setResult(data.result.detected_objects?.map(e => e))
+          setResult(data.result.detected_objects.map(e => e))
           setImage(evt.target.result)
           setError(null)
           setLoading(false)
@@ -94,6 +95,8 @@ function App() {
     }
     reader.readAsDataURL(file)
   }
+
+  console.log(result)
   useEffect(() => {
     getVideo()
   }, [video, openCamera])
@@ -110,16 +113,16 @@ function App() {
           <input className="form-control" type="file" id="formFile" disabled={openCamera} onChange={(e) => inputChange(e)} />
         </div>
         <canvas ref={photo} style={{ display: 'none' }}></canvas>
-        {/* {openCamera ? <canvas ref={photo}></canvas> : <></>} */}
         {error ? <>{error.message}</> : ''}
         {result ? result.map((item, ind) => {
           return (
             <div key={ind} className='mt-2'>
-              <div className="d-flex justify-content-start align-items-center flex-wrap" style={{ position: 'relative' }}>
-                <div className="canvas">
+              <div className="d-flex justify-content-end align-items-center flex-wrap" style={{ position: 'relative' }}>
+                <div className="canvas" style={{ position:'relative'}}>
                   <img src={image} alt="" style={{ width: '100%' }} />
+                  {item.bounding_box && <BoxContainer top={item.bounding_box.top} left={item.bounding_box.left} right={item.bounding_box.right} bottom={item.bounding_box.bottom}/>} 
                 </div>
-                <div className={`detail ${hasPhoto ? 'd-block' : 'd-none'}`}>
+                <div className={`detail ${hasPhoto ? 'd-block' : 'd-none'} `}>
                   <ul className='p-1'>
                     <li>name : {item.name ? item.name : '-'}</li>
                     <li>parent : {item.parent ? item.parent : '-'}</li>
@@ -131,22 +134,6 @@ function App() {
           )
         })
           : loading ? <>.....Loading</> : ''}
-
-        {/* <div className={'result' + (hasPhoto ? 'hasphoto' : '')}> */}
-        {/* <div className="" style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <div className="">
-            <canvas ref={photo}></canvas>
-            {hasPhoto && result ? <img src={image} alt="" /> : <></>}
-          </div>
-          <div className="detail">
-            {result ? <ul>
-              <li>name: {result.detected_objects[0].name}</li>
-              <li>parent: {result.detected_objects[0].parent}</li>
-              <li>confidence: {result.detected_objects[0].confidence}</li>
-            </ul> : ''}
-          </div>
-        </div> */}
-        {/* </div> */}
       </div>
 
     </div>

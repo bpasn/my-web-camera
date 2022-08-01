@@ -58,11 +58,10 @@ video {
   align-items: center;
   position: absolute;
   top: 2%;
-  left: 1%;
   right: 0;
-  bottom: 71%;
   width: 450px;
   padding: 6px;
+  
 }
 .detail ul li {
   list-style: none;
